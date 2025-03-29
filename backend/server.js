@@ -19,7 +19,7 @@ const server = http.createServer(app);
 // }));
 
 app.use(cors({ 
-  origin: process.env.NODE_ENV === "production" 
+  origin: process.env.NODE_ENV === "development" 
     ? true  // Allow any origin in production (will respect CORS headers)
     : "https://intervuepolling.onrender.com/",  // Development origin
   methods: ["GET", "POST"] 
