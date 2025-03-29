@@ -151,93 +151,105 @@ const Student = ({ socket }) => {
           {currentQuestion ? (
             !showResults ? (
               <div className="gap-y-4 gap-x-4 border-t border-[#6edff6] ml-0 md:ml-4 p-4 md:p-12">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-xl font-bold">
-                    Question: {currentQuestion.question}
-                  </h2>
-                  <div className="text-lg font-semibold bg-gray-700 p-2 rounded-lg">
-                    Time:{" "}
-                    <span
-                      className={
-                        timeRemaining < 10 ? "text-red-500" : "text-green-500"
-                      }
-                    >
-                      {timeRemaining}s
-                    </span>
+                {/* New Question UI based on the provided image */}
+                <div className="flex items-center mb-6">
+                  <div className="font-bold text-lg">Question {currentQuestion.id || 1}</div>
+                  <div className="ml-3 flex items-center">
+                    <div className="text-red-500 font-semibold">
+                      <span className="inline-block mr-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="12" y1="6" x2="12" y2="12"></line>
+                          <line x1="12" y1="16" x2="12" y2="16"></line>
+                        </svg>
+                      </span>
+                      {timeRemaining > 9 ? timeRemaining : `0${timeRemaining}`}:{timeRemaining > 0 ? "00" : "00"}
+                    </div>
                   </div>
                 </div>
-                {currentQuestion.options.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`flex hover:bg-gray-300 hover:text-black ${
-                      selectedOption === option
-                        ? "border-2 border-green-500"
-                        : "border border-[#6edff6]"
-                    } justify-between my-4 h-12 p-4 cursor-pointer items-center rounded-md`}
-                    onClick={() => setSelectedOption(option)}
+                
+                <div className="bg-gray-700 text-white p-4 rounded-md mb-6">
+                  <h2 className="font-bold text-lg">{currentQuestion.question}</h2>
+                </div>
+                
+                <div className="space-y-3">
+                  {currentQuestion.options.map((option, index) => {
+                    // Map index to appropriate letter
+                    const letterOptions = ['A', 'B', 'C', 'D'];
+                    const letter = letterOptions[index] || index + 1;
+                    
+                    return (
+                      <div 
+                        key={index}
+                        onClick={() => setSelectedOption(option)}
+                        className={`cursor-pointer rounded-md overflow-hidden ${
+                          selectedOption === option 
+                            ? 'border-2 border-purple-600' 
+                            : 'border border-gray-300'
+                        }`}
+                      >
+                        <div className={`flex items-center`}>
+                          <div className={`w-8 h-8 flex items-center justify-center rounded-full m-3 text-white ${
+                            selectedOption === option 
+                              ? 'bg-purple-600' 
+                              : 'bg-gray-400'
+                          }`}>
+                            {letter}
+                          </div>
+                          <div className="p-3 flex-grow">{option}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                <div className="flex justify-center mt-6">
+                  <button
+                    className={`py-2 px-8 rounded-full font-semibold ${
+                      !selectedOption || votingValidation 
+                        ? "bg-gray-400 text-gray-100 cursor-not-allowed" 
+                        : "bg-purple-600 text-white hover:bg-purple-700"
+                    }`}
+                    onClick={handlePoling}
+                    disabled={!selectedOption || votingValidation}
                   >
-                    {option}
-                  </div>
-                ))}
-                <button
-                  className={`h-10 bg-green-600 text-white w-full md:w-1/5 rounded-lg font-semibold mt-4 ${
-                    !selectedOption || votingValidation 
-                      ? "opacity-50 cursor-not-allowed" 
-                      : "hover:bg-green-700"
-                  }`}
-                  onClick={handlePoling}
-                  disabled={!selectedOption || votingValidation}
-                >
-                  Submit
-                </button>
+                    Submit
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className="mt-6 mb-12 border border-[#6edff6] shadow-md mx-4">
-                <h2 className="text-center items-center font-bold text-xl flex justify-center m-3">
-                  <img
-                    src={tower}
-                    alt=""
-                    width="20px"
-                    height="20px"
-                    className="mr-5"
-                  />
-                  Live Results
-                </h2>
-                <ul className="gap-y-4 gap-x-4 border-t border-[#6edff6] w-full p-4">
-                  {currentQuestion &&
-                    Object.entries(currentQuestion.optionsFrequency).map(
-                      ([option], index) => (
-                        <div className="m-4" key={index}>
-                          <ProgressBar
-                            now={parseInt(currentQuestion.results[option]) || 0}
-                            label={
-                              <span className="text-xl text-black font-semibold">
-                                {option}{" "}
-                                {parseInt(currentQuestion.results[option]) || 0}
-                                %
-                                {currentQuestion.correctAnswer === option &&
-                                  " ✓"}
-                              </span>
-                            }
-                            variant={getVariant(
-                              parseInt(currentQuestion.results[option]) || 0
-                            )}
-                            animated={
-                              getVariant(
-                                parseInt(currentQuestion.results[option]) || 0
-                              ) !== "success"
-                            }
-                          />
-                        </div>
-                      )
-                    )}
-                </ul>
-                {!currentQuestion.answered && (
-                  <div className="text-center pb-4 text-yellow-300">
-                    Waiting for other students to submit their answers...
-                  </div>
-                )}
-              </div>
+              <div className="mt-8 mb-12 border border-[#6edff6] shadow-lg rounded-lg mx-4 p-6 bg-white">
+      <h2 className="text-center font-bold text-2xl flex justify-center items-center gap-3 text-gray-800">
+        <img src={tower} alt="Tower Icon" width="24px" height="24px" />
+        Live Results
+      </h2>
+
+      <ul className="border-t border-[#6edff6] w-full p-6 space-y-4">
+        {currentQuestion &&
+          Object.entries(currentQuestion.optionsFrequency).map(([option], index) => (
+            <div key={index} className="flex flex-col gap-2">
+              <ProgressBar
+                now={parseInt(currentQuestion.results[option]) || 0}
+                label={
+                  <span className="text-lg font-medium text-gray-800">
+                    {option} {parseInt(currentQuestion.results[option]) || 0}%
+                    {currentQuestion.correctAnswer === option && " ✓"}
+                  </span>
+                }
+                variant={getVariant(parseInt(currentQuestion.results[option]) || 0)}
+                animated={getVariant(parseInt(currentQuestion.results[option]) || 0) !== "success"}
+                className="rounded-lg"
+              />
+            </div>
+          ))}
+      </ul>
+
+      {!currentQuestion.answered && (
+        <div className="text-center pb-4 text-yellow-500 font-medium">
+          Waiting for other students to submit their answers...
+        </div>
+      )}
+    </div>
             )
           ) : (
             <div className="flex flex-col items-center justify-center min-h-screen">
