@@ -52,7 +52,3 @@ Watch the [video demonstration](https://drive.google.com/file/d/1_p12dGJwolYJzl4
    - Access the application and select the "Student" role.
    - Enter your name to participate.
    - Answer active polls and view real-time results after submission or when the timer expires.
-
-## Contact
-
-For any inquiries or feedback, please contact [dhirajudhani870@gmail.com].
