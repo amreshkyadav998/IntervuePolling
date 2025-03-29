@@ -18,12 +18,12 @@ const server = http.createServer(app);
 //   methods: ["GET", "POST"] 
 // }));
 
-app.use(cors({ 
-  origin: process.env.NODE_ENV === "development" 
-    ? true  // Allow any origin in production (will respect CORS headers)
-    : "https://intervuepolling.onrender.com/",  // Development origin
-  methods: ["GET", "POST"] 
+app.use(cors({
+  origin: ["http://localhost:5173", "https://intervue-polling-cd9h.vercel.app"], 
+  methods: ["GET", "POST"],
+  credentials: true,  // Allows cookies & auth headers if needed
 }));
+
 
 // Serve frontend files in production
 const __dirname1 = path.resolve();
@@ -36,14 +36,24 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Initialize Socket.IO with CORS handling
+// const io = new Server(server, {
+//   cors: {
+//     origin: process.env.NODE_ENV === "production" 
+//       ? true  // Allow any origin in production
+//       : "http://localhost:5173", // Development origin
+//     methods: ["GET", "POST"],
+//   },
+// });
+
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === "production" 
-      ? true  // Allow any origin in production
-      : "http://localhost:5173", // Development origin
+    origin: ["http://localhost:5173", "https://intervue-polling-cd9h.vercel.app"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
+
 
 // Start server
 const PORT = process.env.PORT || 3001;
