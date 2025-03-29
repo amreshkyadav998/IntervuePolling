@@ -21,7 +21,7 @@ const App = () => {
         <div className="flex flex-col justify-center items-center w-full max-w-xl mx-auto p-8">
           <div className="flex justify-center mb-2">
             <div className="inline-flex bg-purple-500 text-white text-xs font-semibold py-1 px-3 rounded-full">
-              Interview Poll
+              Intervue Poll
             </div>
           </div>
           
