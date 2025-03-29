@@ -11,10 +11,17 @@ const app = express();
 const server = http.createServer(app);
 
 // Enable CORS for API requests
+// app.use(cors({ 
+//   origin: process.env.NODE_ENV === "production" 
+//     ? true  // Allow any origin in production (will respect CORS headers)
+//     : "http://localhost:5173",  // Development origin
+//   methods: ["GET", "POST"] 
+// }));
+
 app.use(cors({ 
   origin: process.env.NODE_ENV === "production" 
     ? true  // Allow any origin in production (will respect CORS headers)
-    : "http://localhost:5173", // Development origin
+    : "https://intervuepolling.onrender.com/",  // Development origin
   methods: ["GET", "POST"] 
 }));
 

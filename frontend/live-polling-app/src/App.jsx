@@ -5,7 +5,8 @@ import Teacher from "./components/Teacher";
 import Student from "./components/Student";
 
 // Use the correct server port (must match your backend)
-const socket = io.connect("http://localhost:3001");
+// const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://intervuepolling.onrender.com/");
 
 const App = () => {
   const [isTeacher, setIsTeacher] = useState(null);
